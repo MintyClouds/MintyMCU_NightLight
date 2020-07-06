@@ -1,0 +1,84 @@
+esphome:
+  name: mintyrgb_nightlight
+  platform: ESP8266
+  board: d1_mini_lite
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: !secret ap_ssid
+    password: !secret ap_password
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# # Enable Home Assistant API
+# api:
+#   password: !secret api_password
+
+mqtt:
+ broker: !secret mqtt_broker
+ username: !secret mqtt_username
+ password: !secret mqtt_password
+
+ota:
+  password: !secret ota_password
+
+sensor:
+  - platform: wifi_signal
+    name: "MintyRGB_NightLight WiFi Signal Sensor"
+    update_interval: 5s
+  - platform: uptime
+    name: "MintyRGB_NightLight Uptime Sensor"
+    update_interval: 5s
+    filters:
+      - lambda: return x / (24 * 60);
+    unit_of_measumerent: "days"
+  - platform: ultrasonic
+    trigger_pin: D1
+    echo_pin: D2
+    name: "MintyRGB_NightLight Ultrasonic Sensor"
+  - platform: adc
+    pin: VCC
+    name: "MintyRGB_NightLight VCC Battery Voltage Sensor"
+    update_interval: 1s
+
+
+binary_sensor:
+    - platform: status
+      name: "MintyRGB_NightLight Status"
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "MintyRGB_NightLight IP Address"
+    ssid:
+      name: "MintyRGB_NightLight Connected SSID"
+    bssid:
+      name: "MintyRGB_NightLight Connected BSSID"
+  - platform: version
+    name: "MintyRGB_NightLight ESPHome Version"
+
+light:
+  - platform: neopixelbus
+    type: GRB
+    pin: GPIO23
+    num_leds: 144
+    name: "MintyRGB NightLight"
+    color_correct: [15%, 15%, 15%]
+
+deep_sleep:
+  run_duration: 10s
+  sleep_duration: 60min
+
+switch:
+  # System
+  - platform: shutdown
+    name: "MintyRGB_NightLight Shutdown"
+  - platform: restart
+    name: "MintyRGB_NightLight Restart"
