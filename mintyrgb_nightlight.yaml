@@ -37,8 +37,8 @@ sensor:
     name: "MintyRGB_NightLight Uptime Sensor"
     update_interval: 5s
     filters:
-      - lambda: return x / (24 * 60);
-    unit_of_measumerent: "days"
+      - lambda: return x / (24 * 60 * 5);
+    unit_of_measurement: "days"
   - platform: ultrasonic
     trigger_pin: D1
     echo_pin: D2
@@ -67,7 +67,7 @@ text_sensor:
 light:
   - platform: neopixelbus
     type: GRB
-    pin: GPIO23
+    pin: GPIO3
     num_leds: 144
     name: "MintyRGB NightLight"
     color_correct: [15%, 15%, 15%]
