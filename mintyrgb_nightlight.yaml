@@ -43,10 +43,25 @@ sensor:
     trigger_pin: D1
     echo_pin: D2
     name: "MintyRGB_NightLight Ultrasonic Sensor"
+    on_value_range:
+      below: 0.7
+#      then:
+#        - switch.turn_on: mintymcu_rgb_nightlight_default_color
+#        - delay: 120s
+#        - switch.turn_off:  mintymcu_rgb_nightlight_default_color
+      then:
+        if:
+          condition:
+            light.is_on: mintyrgb_nightlight
+          then:
+            - light.turn_off: mintyrgb_nightlight
+          else:
+           - switch.turn_on: mintymcu_rgb_nightlight_default_color
+    update_interval: 0.5s
   - platform: adc
     pin: VCC
     name: "MintyRGB_NightLight VCC Battery Voltage Sensor"
-    update_interval: 1s
+    update_interval: 30s
 
 
 binary_sensor:
@@ -70,11 +85,49 @@ light:
     pin: GPIO3
     num_leds: 24
     name: "MintyRGB NightLight"
+    id: "mintyrgb_nightlight"
     # color_correct: [15%, 15%, 15%]
+    effects:
+      - flicker:
+          name: Flicker Effect (80%, 4%)
+          alpha: 80%
+          intensity: 4%
+      - addressable_rainbow:
+      - addressable_scan:
+          name: Scan Effect (150ms, 35 leds)
+          move_interval: 150ms
+          scan_width: 35
+      - addressable_flicker:
+          name: Addressable Flicker Effect (150ms, 50%)
+          update_interval: 150ms
+          intensity: 50%
+      - addressable_twinkle:
+          name: Twinkle Effect (4ms, 15%)
+          progress_interval: 4ms
+          twinkle_probability: 15%
+      - addressable_fireworks:
+          name: Fireworks Effect (50ms, 10%, 30)
+          update_interval: 50ms
+          spark_probability: 10%
+          use_random_color: false
+          fade_out_rate: 30
+      - addressable_color_wipe:
+          name: Color Wipe Effect (50ms, 5 leds)
+          colors:
+            - red: 4%
+              green: 100%
+              blue: 57%
+              num_leds: 1
+            - red: 4%
+              green: 80%
+              blue: 57%
+              num_leds: 5
+          add_led_interval: 100ms
+          reverse: False
 
-deep_sleep:
-  run_duration: 10s
-  sleep_duration: 60min
+# deep_sleep:
+#  run_duration: 10s
+#  sleep_duration: 60min
 
 switch:
   # System
@@ -82,3 +135,16 @@ switch:
     name: "MintyRGB_NightLight Shutdown"
   - platform: restart
     name: "MintyRGB_NightLight Restart"
+  - platform: template
+    name: "MintyMCU_RGB NightLight Default Color"
+    id: "mintymcu_rgb_nightlight_default_color"
+    turn_on_action:
+        - light.turn_on:
+            id: mintyrgb_nightlight
+            brightness: 80%
+            red: 100%
+            green: 0%
+            blue: 74%
+    turn_off_action:
+        - light.turn_off:
+            id: mintyrgb_nightlight
