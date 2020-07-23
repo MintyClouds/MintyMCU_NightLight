@@ -43,12 +43,17 @@ sensor:
     trigger_pin: D1
     echo_pin: D2
     name: "MintyRGB_NightLight Ultrasonic Sensor"
+    update_interval: 0.2s
+    filters:
+#      - sliding_window_moving_average:
+#          window_size: 3
+#          send_every: 3
+      - median:
+          window_size: 7
+          send_every: 4
+#        send_first_at: 3
     on_value_range:
-      below: 0.7
-#      then:
-#        - switch.turn_on: mintymcu_rgb_nightlight_default_color
-#        - delay: 120s
-#        - switch.turn_off:  mintymcu_rgb_nightlight_default_color
+      below: 0.8
       then:
         if:
           condition:
@@ -57,7 +62,6 @@ sensor:
             - light.turn_off: mintyrgb_nightlight
           else:
            - switch.turn_on: mintymcu_rgb_nightlight_default_color
-    update_interval: 0.5s
   - platform: adc
     pin: VCC
     name: "MintyRGB_NightLight VCC Battery Voltage Sensor"
