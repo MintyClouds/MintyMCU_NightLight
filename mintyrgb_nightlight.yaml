@@ -18,13 +18,13 @@ captive_portal:
 logger:
 
 # # Enable Home Assistant API
-# api:
-#   password: !secret api_password
+ api:
+   password: !secret api_password
 
-mqtt:
- broker: !secret mqtt_broker
- username: !secret mqtt_username
- password: !secret mqtt_password
+#mqtt:
+# broker: !secret mqtt_broker
+# username: !secret mqtt_username
+# password: !secret mqtt_password
 
 ota:
   password: !secret ota_password
