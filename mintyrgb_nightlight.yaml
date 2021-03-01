@@ -90,7 +90,7 @@ light:
     num_leds: 24
     name: "MintyRGB NightLight"
     id: "mintyrgb_nightlight"
-    color_correct: [80%, 80%, 80%]
+    # color_correct: [15%, 15%, 15%]
     effects:
       - flicker:
           name: Flicker Effect (80%, 4%)
